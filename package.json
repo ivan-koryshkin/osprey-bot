@@ -1,0 +1,23 @@
+{
+  "name": "osprey_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "build": "tsc",
+    "prestart": "npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@telegraf/types": "^6.9.1",
+    "mustache": "^4.2.0",
+    "telegraf": "^4.14.0",
+    "tsc": "^2.0.4",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "bin",
+    "migrations",
+    "db-migration"
+  ],
+  "include": ["src/**/*.ts"]
+}
