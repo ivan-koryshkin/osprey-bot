@@ -4,13 +4,10 @@ import { onUserSync } from "./handlers/user.handler"
 import { IsLocation, IsWebAppData } from "./handlers/common.handlers"
 import { Context } from "telegraf"
 import { Update } from "@telegraf/types"
-import { DELAY_DEFAULT, ERR_MSG, ERR_NO_ACTIVE_ORDERS } from "./const"
+import { DELAY_DEFAULT, ERR_NO_ACTIVE_ORDERS } from "./const"
 
-const token = "1057247541:AAF70h10oY6DNVm4Pu6wLBlliTEP3D_gvPI";
-const appUrl = "https://osprey-hub.ru/miniapp"
-
-const bot = new Telegraf(token)
-
+const bot = new Telegraf(process.env.TELEGRAM_TOKEN)
+const appUrl = process.env.API_URL
 
 bot.command("start", (ctx) => {
   const url = `${appUrl}?userId=${ctx.from.id}`

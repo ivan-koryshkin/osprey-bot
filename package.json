@@ -14,7 +14,6 @@
     "@telegraf/types": "^6.9.1",
     "mustache": "^4.2.0",
     "telegraf": "^4.14.0",
-    "tsc": "^2.0.4",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
