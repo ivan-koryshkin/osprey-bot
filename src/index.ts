@@ -43,7 +43,7 @@ bot.on('message', async (ctx: Context<Update.MessageUpdate>) => {
     if(message === null) { 
       ctx.reply(ERR_NO_ACTIVE_ORDERS) 
     } else {
-      await ctx.sendMessage(message)
+      await ctx.reply(message, {parse_mode: 'HTML'})
     }
   }
 })

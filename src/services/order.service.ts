@@ -60,14 +60,18 @@ export class OrderService extends Service {
         return null
     }
 
-    async confirmOrderDelivery(longtitude: number, latitude: number) : Promise<boolean> {
+    async confirmOrderDelivery(longitude: number, latitude: number) : Promise<boolean> {
         const url = `${ HUB_URI }/application/delivery`
         const response = await this.post(url, {
             latitude: latitude,
-            longtitude: longtitude,
+            longitude: longitude,
             externalId: this.externalId
         })
-        if(debug) { this.debug(response.status, 'confirm-delivery') }
+        if(debug) { 
+            this.debug(response.status, 'confirm-delivery')
+            const payload = await response.json()
+            console.error(payload) 
+        }
         return response.status === 200
     }
 

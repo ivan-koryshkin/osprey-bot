@@ -21,7 +21,7 @@ export async function onOrderConfirmDelivery(
 ) : Promise<string|null> {
     const service = new OrderService(ctx.from.id.toString())
     const status = await service.confirmOrderDelivery(
-        ctx.message['location']['longtitude'],
+        ctx.message['location']['longitude'],
         ctx.message['location']['latitude']
     )
     if(status) {
