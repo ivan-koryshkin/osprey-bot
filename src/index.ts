@@ -40,7 +40,7 @@ bot.on('message', async (ctx: Context<Update.MessageUpdate>) => {
     }
   } else if(IsLocation(ctx)) {
     await onOrderConfirmDelivery(ctx)
-    ctx.answerCbQuery('Thank you!')
+    await ctx.sendMessage('👍')
   }
 })
 
