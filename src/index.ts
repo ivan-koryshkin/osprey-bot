@@ -34,6 +34,7 @@ bot.on('message', async (ctx: Context<Update.MessageUpdate>) => {
           reply_markup: inlineKeyboard
         })
       } catch(e) {
+          console.error(e)
           ctx.sendMessage('Oops something went wrong, try later :(')
       }
     }
