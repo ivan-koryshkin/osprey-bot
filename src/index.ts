@@ -39,8 +39,12 @@ bot.on('message', async (ctx: Context<Update.MessageUpdate>) => {
       }
     }
   } else if(IsLocation(ctx)) {
-    await onOrderConfirmDelivery(ctx)
-    await ctx.sendMessage('👍')
+    const message = await onOrderConfirmDelivery(ctx)
+    if(message === null) { 
+      ctx.reply(ERR_NO_ACTIVE_ORDERS) 
+    } else {
+      await ctx.sendMessage(message)
+    }
   }
 })
 
