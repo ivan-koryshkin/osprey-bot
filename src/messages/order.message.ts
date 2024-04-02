@@ -9,7 +9,7 @@ const TMPL_ORDER_CONFIRMED = path.join(TEMPLATES, 'order-confirmed.html')
 
 
 function calcTotal(order: OrderCreateResponse) : number {
-    const prices = order.items.map((o: OrderItemCreateResponse) => {
+    const prices: number[] = order.items.map((o: OrderItemCreateResponse) => {
         return +o.count * o.product.price 
     })
     return prices.reduce((subTotal: number, itemPrice: number) => {
