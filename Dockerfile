@@ -9,5 +9,4 @@ COPY tsconfig.json tsconfig.json
 RUN npm install
 RUN npm run build
 ENV TEMPLATES /app/templates
-
 ENTRYPOINT ["npm", "start"]
