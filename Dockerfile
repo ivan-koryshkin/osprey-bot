@@ -1,9 +1,11 @@
 FROM node:20
 
 WORKDIR /app
-COPY dist dist
+COPY src src
 COPY templates templates
 COPY package.json package.json
 COPY package-lock.json package-lock.json
+COPY tsconfig.json tsconfig.json
 RUN npm install
+RUN npm run build
 ENTRYPOINT ["npm", "start"]
