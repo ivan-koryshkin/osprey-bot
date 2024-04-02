@@ -6,17 +6,25 @@
   "scripts": {
     "start": "node ./dist/index.js",
     "build": "tsc",
-    "prestart": "npm run build"
+    "prestart": "npm run build",
+    "proto-build": "grpc_tools_node_protoc --plugin=protoc-gen-ts=node_modules/.bin/protoc-gen-ts --ts_out=grpc_js:./src/proto --plugin=protoc-gen-ts=`which protoc-gen-ts` direct.proto"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@grpc/grpc-js": "^1.10.2",
     "@telegraf/types": "^6.9.1",
+    "grpc-tools": "^1.12.4",
+    "ioredis": "^5.3.2",
     "mustache": "^4.2.0",
+    "redis": "^4.6.13",
     "telegraf": "^4.14.0",
+    "ts-protoc-gen": "^0.15.0",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "@types/node": "^20.10.5"
+    "@types/ioredis": "^5.0.0",
+    "@types/node": "^20.10.5",
+    "protoc-gen-ts": "^0.8.7"
   }
 }

@@ -1,6 +1,6 @@
 import { url } from "inspector";
 
-const debug = process.env.DEBUG;
+const debug: string = process.env.DEBUG;
 
 export class Service {
     private token: string

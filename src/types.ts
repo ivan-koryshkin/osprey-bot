@@ -53,3 +53,16 @@ export interface OrderCreateResponse {
 export interface OrderConfirmationMessage extends OrderCreateResponse{
     total: number
 }
+
+export interface MqMessage {
+    type: 'feedback' | 'broadcast'
+    message: string
+    userId: string 
+}
+
+export interface BrokerChannelResponse {
+    id: string
+    account: string
+    name: string
+    token: string
+}

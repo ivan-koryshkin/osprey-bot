@@ -1,22 +1,39 @@
-import { Telegraf, Markup } from "telegraf"
-import { onOrderConfirmDelivery, onOrderConfirmPickup, onOrderCreate } from "./handlers/order.handler"
-import { onUserSync } from "./handlers/user.handler"
-import { IsLocation, IsWebAppData } from "./handlers/common.handlers"
-import { Context } from "telegraf"
-import { Update } from "@telegraf/types"
-import { DELAY_DEFAULT, ERR_NO_ACTIVE_ORDERS } from "./const"
+import { Telegraf, Markup } from "telegraf";
+import { onOrderConfirmDelivery, onOrderConfirmPickup, onOrderCreate } from "./handlers/order.handler";
+import { onUserSync } from "./handlers/user.handler";
+import { IsLocation, IsWebAppData } from "./handlers/common.handlers";
+import { Context } from "telegraf";
+import { Update } from "@telegraf/types";
+import { DELAY_DEFAULT, ERR_NO_ACTIVE_ORDERS } from "./const";
+import { getBroker } from "./infra/broker"
+import { MqMessage, BrokerChannelResponse } from "./types"
+import { ChannelService } from "./services/channel.service";
+
 
 const bot = new Telegraf(process.env.TELEGRAM_TOKEN)
-const appUrl = process.env.API_URL
+const appUrl = process.env.API_URL;
+const broker = getBroker();
+
+const channelService = new ChannelService();
+channelService.requestChannel().then((initInfo: BrokerChannelResponse) => {
+  broker.subscribe(initInfo.id);
+  broker.on('message', (ch: string, msg: string) => {
+    try {
+      const payload = JSON.parse(msg) as MqMessage
+      if(payload.type === 'feedback') {
+        bot.telegram.sendMessage(payload.userId, payload.message)
+      }
+    } catch(e: any) {
+      console.error({channel: ch, message: msg, error: e})
+    }
+  })
+})
+
 
 bot.command("start", (ctx) => {
   const url = `${appUrl}?userId=${ctx.from.id}`
-  return ctx.reply(
-    "Open Menu",
-    Markup.keyboard([
-      Markup.button.webApp("Open", url),
-    ]).resize(),
-  );
+  console.log({chat: ctx.chat.id, user: ctx.message.from.id})
+  return ctx.reply("Open Menu", Markup.keyboard([Markup.button.webApp("Open", url),]).resize());
 });
 
 bot.on('message', async (ctx: Context<Update.MessageUpdate>) => {
@@ -61,6 +78,7 @@ bot.action('order_pickup_delay_20', async (ctx: Context<Update.CallbackQueryUpda
   if(message === null) { ctx.reply(ERR_NO_ACTIVE_ORDERS) }
   else { ctx.reply(message, {parse_mode: 'HTML'}) }
 })
+console.log('bot started')
 
 bot.launch()
 
