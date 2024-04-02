@@ -10,10 +10,9 @@ export class ChannelService extends Service {
     }
 
     async requestChannel() : Promise<BrokerChannelResponse> {
-        const url = `${HUB_URI}/application/channel/read`
-        const result = await this.get(url)
+        const url: string = `${HUB_URI}/application/channel/read`
+        const result: Response = await this.get(url)
         if(debug) { this.debug(result.status, 'sync') }
-        const payload = await result.json() as BrokerChannelResponse
-        return payload;
+        return await result.json() as BrokerChannelResponse
     }
 }
