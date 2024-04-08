@@ -16,9 +16,11 @@ const broker = getBroker();
 
 const channelService = new ChannelService();
 channelService.requestChannel().then((initInfo: BrokerChannelResponse) => {
+  console.log(initInfo)
   broker.subscribe(initInfo.id);
   broker.on('message', (ch: string, msg: string) => {
     try {
+      console.log(msg)
       const payload = JSON.parse(msg) as MqMessage
       if(payload.type === 'feedback') {
         bot.telegram.sendMessage(payload.userId, payload.message)
