@@ -1,12 +1,7 @@
-import * as fs from 'fs'
-import * as path from 'path'
-import * as mustache from 'mustache';
 import { OrderConfirmationMessage, OrderCreateResponse, OrderItemCreateResponse } from "../types"
-import { TEMPLATES } from '../const';
+import { TMPL_ORDER_UNCONFIRMED, TMPL_ORDER_CONFIRMED, TMPL_ORDER_DONE, TMPL_NO_ACTIVE_ORDERS } from '../const';
 
-const TMPL_ORDER_UNCONFIRMED = path.join(TEMPLATES, 'order-unconfirmed.html')
-const TMPL_ORDER_CONFIRMED = path.join(TEMPLATES, 'order-confirmed.html')
-
+import { I18n } from './i18n.message';
 
 function calcTotal(order: OrderCreateResponse) : number {
     const prices = order.items.map((o: OrderItemCreateResponse) => {
@@ -18,24 +13,34 @@ function calcTotal(order: OrderCreateResponse) : number {
 }
 
 
-export async function unconfirmedOrder(order: OrderCreateResponse) : Promise<string>{
-    const orderCtx: OrderConfirmationMessage = {...order, total: calcTotal(order)}
-    const htmlTemplate = fs.readFileSync(TMPL_ORDER_UNCONFIRMED).toString()
-    try {
-        return mustache.render(htmlTemplate, orderCtx)
-    } catch(e: any) {
-        console.error(e)
-        new Error(e)
+export class OrderMessageI18n extends I18n {
+    private default_msg_dine_in = "Dine in"
+    private default_msg_dine_in_ru = "В заведении"
+    private default_msg_takeaway = "Takeaway in 20 min";
+    private default_msg_takeaway_ru = "Заберу через 20 мин"
+    unconfirmed(order: OrderCreateResponse) : string {
+        const orderCtx: OrderConfirmationMessage = {...order, total: calcTotal(order)};
+        return this.render(TMPL_ORDER_UNCONFIRMED, orderCtx);
     }
-}
+    
+    confirmed(order: OrderCreateResponse) : string {
+        const orderCtx: OrderConfirmationMessage = {...order, total: calcTotal(order)}
+        return this.render(TMPL_ORDER_CONFIRMED, orderCtx);
+    }
 
-export async function confirmedOrder(order: OrderCreateResponse) : Promise<string> {
-    const orderCtx: OrderConfirmationMessage = {...order, total: calcTotal(order)}
-    const htmlTemplate = fs.readFileSync(TMPL_ORDER_CONFIRMED).toString()
-    try {
-        return mustache.render(htmlTemplate, orderCtx)
-    } catch(e: any) {
-        console.error(e)
-        new Error(e)
+    done() : string {
+        return this.render(TMPL_ORDER_DONE)
+    }
+
+    noActiveOrders() : string {
+        return this.render(TMPL_NO_ACTIVE_ORDERS)
+    }
+
+    dineIn() : string {
+        return this.code === 'ru' ? this.default_msg_dine_in_ru : this.default_msg_dine_in;
+    }
+
+    takeAway() : string {
+        return this.code === 'ru' ? this.default_msg_takeaway_ru : this.default_msg_takeaway;
     }
 }
