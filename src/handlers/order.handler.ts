@@ -3,22 +3,21 @@ import { Update } from "@telegraf/types"
 import { getWebAppData } from './common.handlers';
 import { OrderService } from "../services/order.service";
 import { CustomerSyncResponse, OrderItemCreateResponse, OrderCreateResponse, OrderConfirmationMessage } from "../types"
-import { unconfirmedOrder, confirmedOrder } from "../messages/order.message"
 
 
 export async function onOrderCreate(
     ctx: Context<Update.MessageUpdate>,
     customer: CustomerSyncResponse
-) : Promise<string>{
-    const webdata = await getWebAppData(ctx)
-    const service = new OrderService(customer.externalId, customer)
-    const order = await service.proccessOrder(webdata)
-    return await unconfirmedOrder(order)
+) : Promise<OrderCreateResponse|null>{
+    const webdata = await getWebAppData(ctx);
+    const service = new OrderService(customer.externalId, customer);
+    const order = await service.proccessOrder(webdata);
+    return order;
 }
 
 export async function onOrderConfirmDelivery(
     ctx: Context<Update.MessageUpdate>
-) : Promise<string|null> {
+) : Promise<OrderCreateResponse|null> {
     const service = new OrderService(ctx.from.id.toString())
     const status = await service.confirmOrderDelivery(
         ctx.message['location']['longitude'],
@@ -26,19 +25,19 @@ export async function onOrderConfirmDelivery(
     )
     if(status) {
         const order = await service.lastConfirmed(ctx.from.id.toString())
-        return await confirmedOrder(order)
+        return order;
     }
     return null
 }
 
 export async function onOrderConfirmPickup(
     ctx: Context<Update.CallbackQueryUpdate>, delay?: number
-) : Promise<string|null> {
+) : Promise<OrderCreateResponse|null> {
     const service = new OrderService(ctx.from.id.toString())
     const status = await service.confirmOrderPickup(delay)
     if(status) {
         const order = await service.lastConfirmed(ctx.from.id.toString())
-        return await confirmedOrder(order)
+        return order
     }
     return null
 }
